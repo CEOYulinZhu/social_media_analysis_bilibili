@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     # 设置Seaborn的绘图风格
     # 明确指定Seaborn使用支持中文的字体 whitegrid ，是其中的一种风格，它会在图表北京添加白色网格，更容易地查看图中的数据分布
-    sns.set(style="whitegrid", font='Microsoft YaHei', rc={"axes.unicode_minus": False})
+    sns.set(style="whitegrid", font='SimHei', rc={"axes.unicode_minus": False})
     # 对所有评论进行情感分析
     data['sentiment_score'] = data['contents'].apply(snownlp_sentiment)
 

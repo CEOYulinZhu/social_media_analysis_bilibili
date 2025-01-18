@@ -1,9 +1,10 @@
+import matplotlib
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 
-# 读取评论数据 (假设文件名为 'comments.xlsx')
+# 读取评论数据
 def load_data(file_path):
     """
     加载评论数据，并将评论时间转换为datetime格式。
@@ -11,9 +12,9 @@ def load_data(file_path):
     :return: 数据框df
     """
     df = pd.read_excel(file_path)
-    df['评论时间'] = pd.to_datetime(df['评论时间'], errors='coerce')
-    df['日期'] = df['评论时间'].dt.date
-    df['小时'] = df['评论时间'].dt.hour
+    df['pubdate'] = pd.to_datetime(df['pubdate'], errors='coerce')
+    df['日期'] = df['pubdate'].dt.date
+    df['小时'] = df['pubdate'].dt.hour
     return df
 
 
@@ -66,9 +67,10 @@ def plot_active_points(df, threshold=100):
 def plot_activity_clusters(df):
     """
     使用KMeans聚类分析评论活跃的时间段，并绘制聚类结果。
-
     :param df: 数据框df，包含评论数据
     """
+    # 删除包含NaN 的行
+    df = df.dropna(subset=['小时'])
     X = df[['小时']].values
     kmeans = KMeans(n_clusters=3)  # 聚成3个类
     df['活跃段'] = kmeans.fit_predict(X)
@@ -80,13 +82,16 @@ def plot_activity_clusters(df):
     plt.show()
 
 
-# 主函数：加载数据并绘制所有分析图
-def main(file_path):
-    """
-    主函数，加载数据并绘制所有分析图。
+if __name__ == '__main__':
 
-    :param file_path: 评论数据的文件路径
-    """
+    # 设置中文字体为 SimHei（黑体），解决乱码问题
+    matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+    # 设置负号正常显示
+    matplotlib.rcParams['axes.unicode_minus'] = False
+
+    # 目标文件路径
+    file_path = '../data_processed/7.xlsx'  # 请替换成你实际的文件路径
+
     # 加载数据
     df = load_data(file_path)
 
@@ -101,9 +106,3 @@ def main(file_path):
 
     # 绘制聚类结果
     plot_activity_clusters(df)
-
-
-# 调用主函数，传入文件路径
-if __name__ == '__main__':
-    file_path = 'comments.xlsx'  # 请替换成你实际的文件路径
-    main(file_path)

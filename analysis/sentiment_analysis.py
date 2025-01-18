@@ -5,6 +5,23 @@ import seaborn as sns
 from snownlp import SnowNLP
 
 
+def load_data(file_path):
+    """
+    加载评论数据
+    :param file_path: 评论数据的文件路径
+    :return: 数据框df
+    """
+    # 读取表格数据显示设置
+    pd.set_option('display.max_columns', None)  # 显示所有列
+    pd.set_option('display.width', None)  # 不限宽度，显示整齐
+    pd.set_option('display.max_colwidth', None)  # 显示完整内容
+
+    df = pd.read_excel(file_path)
+    print(df.head(n=1))  # 测试
+
+    return df
+
+
 def snownlp_sentiment(text):
     """
     使用 snownlp 进行情感分析
@@ -84,7 +101,7 @@ def plot_comment_sentiment_trends():
     # agg 是一个聚合函数 ，用于对分组后的数据执行多个操作，将数据根据每个日期分组后，执行不同的聚合操作，生成两个新的列
     daily_data = data.groupby(data['pubdate'].dt.date).agg(
         daily_count=('contents', 'count'),  # count 表示对每个分组的contents列进行计数操作
-        avg_sentiment=('sentiment_score', 'mean')   # mean 是求均值的聚合方法 对每个分组的sentiment_score列进行求均值
+        avg_sentiment=('sentiment_score', 'mean')  # mean 是求均值的聚合方法 对每个分组的sentiment_score列进行求均值
     ).reset_index()  # 重置索引为默认索引 groupby 操作会将分组的列作为新的索引
 
     # 绘制评论数量与平均情感得分时间趋势图
@@ -94,7 +111,8 @@ def plot_comment_sentiment_trends():
 
     # 评论数量趋势
     ax1.set_xlabel('日期', fontsize=12)
-    ax1.set_ylabel('评论数量', fontsize=12, color='tab:blue')  # tab:blue 使用 matplotlib 中名为 tab的调色板中的蓝色，tab是一个简洁且有条理的颜色系列
+    ax1.set_ylabel('评论数量', fontsize=12,
+                   color='tab:blue')  # tab:blue 使用 matplotlib 中名为 tab的调色板中的蓝色，tab是一个简洁且有条理的颜色系列
     ax1.plot(daily_data['pubdate'], daily_data['daily_count'], color='tab:blue', label='评论数量')
     # 自定义坐标轴的刻度标签的样式
     ax1.tick_params(axis='y', labelcolor='tab:blue')
@@ -148,14 +166,8 @@ def plot_sentiment_like_heatmap():
 
 
 if __name__ == '__main__':
-    # 读取表格数据显示设置
-    pd.set_option('display.max_columns', None)  # 显示所有列
-    pd.set_option('display.width', None)  # 不限宽度，显示整齐
-    pd.set_option('display.max_colwidth', None)  # 显示完整内容
-
     # 加载评论数据
-    data = pd.read_excel('../data_processed/7.xlsx')
-    print(data.head(n=1))
+    data = load_data(file_path='../data_processed/7.xlsx')
 
     # 设置Seaborn的绘图风格
     # 明确指定Seaborn使用支持中文的字体 whitegrid ，是其中的一种风格，它会在图表北京添加白色网格，更容易地查看图中的数据分布
@@ -169,4 +181,3 @@ if __name__ == '__main__':
     plot_sentiment_pie()
     plot_sentiment_like_scatter()
     plot_sentiment_like_heatmap()
-

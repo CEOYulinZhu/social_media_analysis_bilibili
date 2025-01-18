@@ -1,13 +1,14 @@
+# 评论活跃度分析
+
 import matplotlib
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 
-# 读取评论数据
 def load_data(file_path):
     """
-    加载评论数据，并将评论时间转换为datetime格式。
+    加载评论数据，并将评论时间转换为datetime格式
     :param file_path: 评论数据的文件路径
     :return: 数据框df
     """
@@ -18,10 +19,9 @@ def load_data(file_path):
     return df
 
 
-# 按日期绘制评论数量变化趋势
 def plot_daily_comments(df):
     """
-    按日期绘制评论数量变化趋势图。
+    按日期绘制评论数量变化趋势图
     :param df: 数据框df，包含评论数据
     """
     daily_comments = df.groupby('日期').size()
@@ -31,10 +31,9 @@ def plot_daily_comments(df):
     plt.show()
 
 
-# 按小时绘制评论数量分布图
 def plot_hourly_comments(df):
     """
-    按小时绘制评论数量分布的柱状图。
+    按小时绘制评论数量分布的柱状图
     :param df: 数据框df，包含评论数据
     """
     hourly_comments = df.groupby('小时').size()
@@ -44,10 +43,9 @@ def plot_hourly_comments(df):
     plt.show()
 
 
-# 绘制带有活动点标记的评论数量趋势图
 def plot_active_points(df, threshold=100):
     """
-    根据评论数量的差异，找出评论数剧烈变化的点，并绘制带标记的评论数量趋势图。
+    根据评论数量的差异，找出评论数剧烈变化的点，并绘制带标记的评论数量趋势图
     :param df: 数据框df，包含评论数据
     :param threshold: 设定评论数量变化的阈值，默认值为100
     """
@@ -63,10 +61,9 @@ def plot_active_points(df, threshold=100):
     plt.show()
 
 
-# 聚类分析：按小时绘制评论时间段活跃的分布
 def plot_activity_clusters(df):
     """
-    使用KMeans聚类分析评论活跃的时间段，并绘制聚类结果。
+    使用KMeans聚类分析评论活跃的时间段，并绘制聚类结果
     :param df: 数据框df，包含评论数据
     """
     # 删除包含NaN 的行
